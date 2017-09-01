@@ -7,6 +7,7 @@ from boto.mturk.connection import MTurkRequestError
 import os
 import simpleamt
 import sys
+import pdb
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser(parents=[simpleamt.get_parent_parser()])
@@ -38,6 +39,7 @@ if __name__ == '__main__':
 
       # In a previous version I removed all single quotes from the json dump.
       # TODO: double check to see if this is still necessary.
+
       template_params = { 'input': json.dumps(hit_input) }
       html = template.render(template_params)
       html_question = HTMLQuestion(html, frame_height)

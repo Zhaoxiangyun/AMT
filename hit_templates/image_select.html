@@ -24,8 +24,8 @@
       img {
         height: 300px;
         width: 300px;
-	border: solid 1px; 
-	margin: 10px;
+	    border: solid 1px;
+	    margin: 10px;
       }
       .selected {
           box-shadow: 0px 12px 22px 1px #333;
@@ -33,25 +33,56 @@
     </style>
   </head>
   <body>
-    <div class='container'>
-      <h2>Select the best fit image</h2>
+
+  <div id = 'instruction_page'>
+       <h2 align="center">This is the instruction Page.</h2>
+       <h2>In this task, there are three faces given in each page. The face on the top is called anchor face.</h2>
+      <h2> Focusing on the smile of the face, please select face from bottom which is more similar to the smile of the anchor face.
+Please note that you should NOT consider other factors such as pose, gender, skin color, hair style, makeup and etc.</h2>
+      <h2> Please click on the face you selected, then the face will be shadowed as shown in the following examples. If you think that the
+          bottom faces are more similar please click "Bottom faces are more similar to each other". If you think it is hard to say, please
+          click "Hard to say", but note that you can only click this button at most 4 times for each hit otherwise you can not submit.
+          Then you can click button 'Next' to the next page.
+          After completing all pages, you can submit the task by clicking button 'Submit'.  </h2>
+      <h2>Following are three examples for this task. If you are ready to complete this task, please click the 'Start' button. </h2>
+       <center><img src="https://haoxli.blob.core.windows.net/amt0/ex1.png" align="middle" style = 'height: 600px; width:700px;'></center>
+      <p align="center">Example 1</p>
+      <center><img src="https://haoxli.blob.core.windows.net/amt0/ex2.png" align="middle" style = 'height: 600px; width:700px;'></center>
+            <p align="center">Example 2</p>
+      <center><img src="https://haoxli.blob.core.windows.net/amt0/ex3.png" align="middle" style = 'height: 600px; width:700px;'></center>
+            <p align="center">Example 3</p>
+      <center><img src="https://haoxli.blob.core.windows.net/amt0/ex4.png" align="middle" style = 'height: 600px; width:700px;'></center>
+            <p align="center">Example 4</p>
+          <div class='row'>
+               <center><button id='start-btn' class='btn btn-lg btn-primary' disabled>Start</button> </center>
+            </div>
+  </div>
+
+ <div id = 'label_data_page' style='text-align: center;'>
+     <div class='container'>
+      <h2>Please select the face from the bottom which has similar smiling strength with the anchor face.</h2>
     </div>
 
     <div class='container-fluid'>
       <div class='row'>
         <div class='col-xs-12 text-center'>
-		<table style="width:100%">
+		<table align="center">
 			<tr>
 				<td><div id='source-image-container'></div></td>
 			</tr>
 		</table>
-		<h2>Select the most similar image</h2>
-		<table style="width:100%">
+		<p>anchor face</p>
+		<table align="center">
 			<tr>
 				<td><div id='target1-image-container'></div></td>
 				<td><div id='target2-image-container'></div></td>
+                <td><div id='target3-image-container'></div></td>
+                <td><div id='target4-image-container'></div></td>
+
 			</tr>
 		</table>
+            <p id = 'progress'>progress</p>
+
         </div>
       </div>
       <div class='row'>
@@ -64,6 +95,10 @@
         </div>
       </div>
     </div>
+
+
+ </div>
+
 
     {% include "hit_templates/simpleamt.html" %}
 
@@ -93,6 +128,8 @@
           if (!simpleamt.isPreview()) {
             enable_hit();
           }
+            render_instruction_page();
+
 
           // Set up the select_results
           _.each(input, function() { select_results.push(-1); });
@@ -103,23 +140,53 @@
             source_img = data.source
             target1_img = data.target1
             target2_img = data.target2
+            target3_img = data.target3
+            target4_img = data.target4
+
             var img = new Image();
             img.onload = function() { console.log('loaded image from ' + source_img); };
             img.src = source_img;
+
             var img1 = new Image();
             img.onload = function() { console.log('loaded image from ' + target1_img); };
             img.src = target1_img;
+
             var img2 = new Image();
             img.onload = function() { console.log('loaded image from ' + target2_img); };
             img.src = target2_img;
-          });
 
-          render();
+            var img3 = new Image();
+            img.onload = function() { console.log('loaded image from ' + target3_img); };
+            img.src = target3_image;
+
+            var img4 = new Image();
+            img.onload = function() { console.log('loaded image from ' + target4_img); };
+            img.src = target4_image;
+
+          });
+        }
+
+          function render_instruction_page() {
+            if (enabled) {
+                var start_btn = $('#start_btn');
+                start_btn.prop('disabled', false);
+            }
+
+            $('#instruction_page').show();
+            $('#label_data_page').hide();
+            $('#submit-btn').hide();
         }
 
         // Use the current index to update the image and description
         function render() {
+
+          $('#instruction_page').hide();
+          $('#label_data_page').show();
+          $('#submit-btn').show();
+
           // Set up the image
+
+
           $('#source-image-container').empty();
           $('<img>').attr('src', input[idx].source).appendTo($('#source-image-container'));
 
@@ -129,10 +196,18 @@
           $('#target2-image-container').empty();
           $('<img>').attr('src', input[idx].target2).appendTo($('#target2-image-container'));
 
+          $('#target3-image-container').empty();
+          $('<img>').attr('src', input[idx].target3).appendTo($('#target3-image-container'));
+
+          $('#target4-image-container').empty();
+          $('<img>').attr('src', input[idx].target4).appendTo($('#target4-image-container'));
+
 	  // Reset selected states
 	  $('#target1-image-container').removeClass('selected');
 	  $('#target2-image-container').removeClass('selected');
-	  
+	  $('#target3-image-container').removeClass('selected');
+      $('#target4-image-container').removeClass('selected');
+
 	  if (select_results[idx] == 1) {
 	  	$('#target1-image-container').addClass('selected');
 	  }
@@ -140,6 +215,17 @@
 	  if (select_results[idx] == 2) {
 	  	$('#target2-image-container').addClass('selected');
 	  }
+
+	   if (select_results[idx] == 3) {
+	  	$('#target3-image-container').addClass('selected');
+	  }
+
+	  if (select_results[idx] == 4) {
+	  	$('#target4-image-container').addClass('selected');
+	  }
+
+	  document.getElementById("progress").innerHTML = 'Progress: ' + (idx + 1) + '/50'
+
 
           // If the UI is enabled, enable or disable the buttons depending on
           // the index.
@@ -153,6 +239,7 @@
             }
             if (idx < input.length - 1) next_btn.prop('disabled', false);
           }
+
         }
 
         // Update the index, and save the text in the text area.
@@ -180,6 +267,18 @@
 	      select_results[idx] = 2;
 	  });
 
+	  $('#target3-image-container').click(function(){
+	      $('.selected').removeClass('selected');
+	      $(this).addClass('selected');
+	      select_results[idx] = 3;
+	  });
+
+	  $('#target4-image-container').click(function(){
+	      $('.selected').removeClass('selected');
+	      $(this).addClass('selected');
+	      select_results[idx] = 4;
+	  });
+
           $('#next-btn').click(function() { 
 		set_idx(idx + 1) 
 	  });
@@ -187,14 +286,31 @@
 		set_idx(idx - 1) 
 	  });
           $('#submit-btn').prop('disabled', false);
-
+          $('#start-btn').prop('disabled', false);
+          $('#start-btn').click(function() {
+             render();
+          });
           // Set up submit handler.
           simpleamt.setupSubmit();
           $('#submit-btn').click(function() {
+
+           var undecide = 0;
+           var i;
+            for (i = 0; i < 50; i++) {
+                    if (select_results[i] > 3){
+                      undecide = undecide + 1;
+                    }
+                }
+            if (undecide >3){
+             alert('you can not click \'hard to say\' more than for four times');
+             return false;
+            }
+
             if (_.any(select_results, function(d) { return d <= 0; })) {
               alert('You missed some images to select. Correct before submitting.');
               return false;
             }
+
             var output = _.map(_.zip(input, select_results), function(x) {
               return {'image_url': x[0], 'select_result': x[1]};
             });

@@ -3,7 +3,7 @@
     <title>Select the best fit for the left image</title>
     <!-- simpleamt depends on these libraries -->
     <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js'></script>
-    <script src='//cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js'></script>    
+    <script src='//cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js'></script>
     <!-- end of required libraries -->
     <script src='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'></script>
     <script src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js'></script>
@@ -24,7 +24,7 @@
       img {
         width: 300px;
         height: auto;
-	    border: solid 1px; 
+	    border: solid 1px;
 	    margin: 10px;
       }
       .selected {
@@ -157,7 +157,7 @@
           // Reset selected states
           $('#target1-image-container').removeClass('selected');
           $('#target2-image-container').removeClass('selected');
-          
+
           if (select_results[idx] == 1) {
             $('#target1-image-container').addClass('selected');
           }
@@ -205,17 +205,17 @@
               select_results[idx] = 2;
           });
 
-          $('#next-btn').click(function() { 
-            set_idx(idx + 1) 
+          $('#next-btn').click(function() {
+            set_idx(idx + 1)
           });
-          $('#prev-btn').click(function() { 
-            set_idx(idx - 1) 
+          $('#prev-btn').click(function() {
+            set_idx(idx - 1)
           });
           $('#submit-btn').prop('disabled', false);
 
           $('#start-btn').prop('disabled', false);
           $('#start-btn').click(function() {
-             render();     
+             render();
           });
 
           // Set up submit handler.
