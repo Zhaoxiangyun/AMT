@@ -1,5 +1,5 @@
 
-for f in `seq 0 99`
+for f in `seq 100 199`
 do
 python launch_hits.py \
       --html_template=image_select.html \
